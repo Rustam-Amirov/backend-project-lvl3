@@ -1,0 +1,34 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/Rustam-Amirov/backend-project-lvl3/workflows/hexlet-check/badge.svg)](https://github.com/Rustam-Amirov/backend-project-lvl3/actions)",
+  "main": "index.js",
+  "scripts": {
+     "test": "jest"
+  },
+  "bin": {
+    "page-loader": "bin/page-loader.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rustam-Amirov/backend-project-lvl3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Rustam-Amirov/backend-project-lvl3/issues"
+  },
+  "homepage": "https://github.com/Rustam-Amirov/backend-project-lvl3#readme",
+  "dependencies": {
+    "commander": "^9.3.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^28.1.0",
+    "jest-cli": "^28.1.0"
+  }
+}
