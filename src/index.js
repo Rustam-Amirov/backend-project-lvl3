@@ -3,10 +3,10 @@ import axios from 'axios';
 import fsp from 'fs/promises';
 import process from 'process';
 
-export default async (url, arg) => {
+export default (url, arg) => {
     const filePath = arg === '/home/user/current-dir' ? process.cwd() : arg;
     const fileName = getFileName(url);
-    return await axios.get(url)
+    return axios.get(url)
         .then((response) => fsp.writeFile(filePath + '/' + fileName, response.data))
         .then(() => filePath+ '/' + fileName);
 };
