@@ -14,19 +14,21 @@ export default (filePath, fileName, url) => {
         .then(() => imageLink = $('img').attr('src'));
 
     //create dir
-    const promiseCreateDir = new Promise(() => {
-        const dir =  getFileName(url, '_files')
-        fsp.mkdir(filePath + '/' + dir)
-    });
+    const dir =  getFileName(url, '_files');
+    const promiseCreateDir = fsp.mkdir(filePath + '/' + dir);
 
     //download image
-    Promise.all([promiseLink, promiseCreateDir])
+    return Promise.all([promiseLink, promiseCreateDir])
         .then(() => {
+            const link = new URL(url);
             return axios({
                 method: 'get',
-                url: url.host + imageLink,
+                url: link.host + imageLink,
                 responseType: 'stream'
             })
         })
-        .then((response) => console.log(response));
+        .then((response) => {
+            response.data.pipe(fsp.createWriteStream('image.png'));
+        })
+        .catch((err) => err);
 }
