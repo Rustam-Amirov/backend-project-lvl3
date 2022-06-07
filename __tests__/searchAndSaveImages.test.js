@@ -29,11 +29,13 @@ beforeEach(async () => {
 });
 
 test('save_image', async () => {
-    //const image = await fsp.readFile(getFixturePath('image.png'), 'binary')
     nock(url).get(link).reply(
         200,
         () => {
-            return fsp.createReadStream(getFixturePath('image.png'));
+            const stream = fsp.createReadStream(getFixturePath('image.png'));
+            stream.on('open', function () {
+                stream.pipe(res);
+            });
         }
     );
     await searchAndSaveImages(tempdir, filename, url );

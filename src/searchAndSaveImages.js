@@ -21,14 +21,16 @@ export default (filePath, fileName, url) => {
     return Promise.all([promiseLink, promiseCreateDir])
         .then(() => {
             const link = new URL(url);
+            link.pathname = imageLink;
             return axios({
                 method: 'get',
-                url: link.host + imageLink,
+                url: link.href,
                 responseType: 'stream'
-            })
+            });
         })
         .then((response) => {
-            response.data.pipe(fsp.createWriteStream('image.png'));
+            const path = filePath + '/image.png';
+            response.data.pipe(fsp.createWriteStream(path));
         })
-        .catch((err) => err);
+        .catch((err) =>(err));
 }
