@@ -1,6 +1,7 @@
 import searchAndSaveImages from '../src/searchAndSaveImages.js';
 import { test, expect, beforeEach, beforeAll} from '@jest/globals';
 import fsp from 'fs/promises';
+import fs from 'fs';
 import os from 'os';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -30,13 +31,9 @@ beforeEach(async () => {
 
 test('save_image', async () => {
     nock(url).get(link).reply(
-        200,
-        () => {
-            const stream = fsp.createReadStream(getFixturePath('image.png'));
-            stream.on('open', function () {
-                stream.pipe(res);
-            });
-        }
+        200, async (uri, requestBody) => {
+            return await fs.createReadStream(getFixturePath('image.png'))
+        }, {'Content-Type': 'image/png'}
     );
     await searchAndSaveImages(tempdir, filename, url );
     const actual = await fsp.readFile(dest, 'utf-8');
