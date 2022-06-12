@@ -1,5 +1,5 @@
 import getLinks from '../src/getLinks';
-import { test, expect, beforeEach, beforeAll} from '@jest/globals';
+import { test, expect, beforeAll} from '@jest/globals';
 import fsp from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
