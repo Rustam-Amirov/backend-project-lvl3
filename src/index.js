@@ -16,7 +16,8 @@ export default (url, arg) => {
             return response.data;
         })
         .then((data) => getLinks(data, url))
-        .then((links) => downloadFiles(links, url))
-        .then(() => searchAndSaveImages(filePath, fileName, url))
+        .then((links) => downloadFiles(links, url, filePath))
+        //.then((files) => saveFiles(files, filePath))
+        //.then(() => searchAndSaveImages(filePath, fileName, url))
         .then(() => filePath+ '/' + fileName);
 };
