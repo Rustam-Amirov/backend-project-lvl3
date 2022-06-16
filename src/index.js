@@ -2,7 +2,6 @@ import getFileName from './getFileName.js';
 import axios from 'axios';
 import fsp from 'fs/promises';
 import process from 'process';
-import searchAndSaveImages from './searchAndSaveImages';
 import getLinks from './getLinks.js';
 import downloadFiles from './downloadFiles.js';
 
@@ -17,7 +16,5 @@ export default (url, arg) => {
         })
         .then((data) => getLinks(data, url))
         .then((links) => downloadFiles(links, url, filePath))
-        //.then((files) => saveFiles(files, filePath))
-        //.then(() => searchAndSaveImages(filePath, fileName, url))
-        .then(() => filePath+ '/' + fileName);
+        .then (() => finalUrl);
 };

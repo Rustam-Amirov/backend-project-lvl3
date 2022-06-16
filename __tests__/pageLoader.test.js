@@ -19,7 +19,6 @@ test('page loader test', async () => {
         expected
     )
     const resultDir = await pageLoader(url +'/test', tempdir);
-
     const dir = await fsp.readdir(tempdir);
     const resultFile = await fsp.readFile(tempdir + '/' + dir[0], 'utf-8');
     expect(resultDir).toEqual(tempdir + '/' + dir[0]);
