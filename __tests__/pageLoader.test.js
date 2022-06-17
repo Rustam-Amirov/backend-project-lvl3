@@ -6,7 +6,7 @@ import os from 'os';
 import path from 'path';
 
 let tempdir;
-const expected = '<html>Hello</html>';
+const expected = '<html><head></head><body>Hello</body></html>';
 const url = 'https://www.test.com';
 
 beforeEach(async () => {
