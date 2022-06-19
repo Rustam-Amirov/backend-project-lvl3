@@ -1,9 +1,9 @@
 import axios from "axios";
 import fs from 'fs';
 import fsp from 'fs/promises'
-import getFileName from "./getFileName";
+import getFileName from "./getFileName.js";
 import path from 'path';
-import getDirName from "./getDirName";
+import getDirName from "./getDirName.js";
 
 export default (links, url, filePath) => {
 

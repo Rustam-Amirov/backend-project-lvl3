@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
-import getFileName from './getFileName';
-import getDirName from './getDirName';
+import getFileName from './getFileName.js';
+import getDirName from './getDirName.js';
 import fsp from 'fs/promises';
 import path from 'path';
 
