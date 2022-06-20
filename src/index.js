@@ -5,15 +5,19 @@ import process from 'process';
 import getLinks from './getLinks.js';
 import downloadFiles from './downloadFiles.js';
 import changeFile from './changeFile.js';
+import debug from 'debug';
 
 export default (url, arg) => {
+    const log = debug('page-loader');
     const filePath = arg === '/home/user/current-dir' ? process.cwd() : arg;
     const fileName = getFileName(url);
     const finalUrl = filePath + '/' + fileName;
     let fileLinks;
 
+    log(`doing request: ${url}`);
     return axios.get(url)
         .then((response) => {
+            log(`creating and write file ${finalUrl}`);
             fsp.writeFile(finalUrl, response.data);
             return response.data;
         })
@@ -21,6 +25,7 @@ export default (url, arg) => {
         .then((links) => {
             fileLinks = links;
             downloadFiles(links, url, filePath)
+            log(`download other files...`);
         })
         .then(() => changeFile(finalUrl, fileLinks, url))
         .then (() => finalUrl);
