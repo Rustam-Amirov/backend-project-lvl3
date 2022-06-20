@@ -3,12 +3,17 @@ import getFileName from './getFileName.js';
 import getDirName from './getDirName.js';
 import fsp from 'fs/promises';
 import path from 'path';
+import debug from 'debug';
 
 export default (fileName, links, url) => {
 
+    const log = debug('page-loader');
     const newDirName = getDirName(url);
+    log('read file before change links...');
     return fsp.readFile(fileName, 'utf-8')
         .then((html) => {
+            log('success');
+            log('change file...');
             const $ = cheerio.load(html); 
             $('img, link, script').each((index, element) => {
                 if (links.includes($(element).attr('src'))) {
@@ -19,9 +24,12 @@ export default (fileName, links, url) => {
                     $(element).attr('href', path.join(newDirName, newLink));
                 }
             });
+            log('success');
             return $;
         })
         .then(($) => {
+            log('write file...');
             fsp.writeFile(fileName, $.html());
+            log('success');
         })
 }

@@ -6,6 +6,7 @@ import getLinks from './getLinks.js';
 import downloadFiles from './downloadFiles.js';
 import changeFile from './changeFile.js';
 import debug from 'debug';
+import 'axios-debug-log';
 
 export default (url, arg) => {
     const log = debug('page-loader');
