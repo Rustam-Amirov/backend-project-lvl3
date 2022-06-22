@@ -6,13 +6,17 @@ import path from 'path';
 import getDirName from "./getDirName.js";
 import 'axios-debug-log';
 import  debug  from "debug";
+import {PageLoaderException} from "./pageLoaderException.js";
 
 export default (links, url, filePath) => {
 
     const log = debug('page-loader');
     const dir = getDirName(url);
     const dirFiles = path.join(filePath, dir);
-    const promiseCreateDir = fsp.mkdir(dirFiles);
+    const promiseCreateDir = fsp.mkdir(dirFiles)
+        .catch((error) => {
+            throw new PageLoaderException('Error creating dir', error.code);
+        });
 
     log('download files...');
     const promises = links.map((link) => {
@@ -29,7 +33,7 @@ export default (links, url, filePath) => {
             response.data.pipe(file);
             return link;
         }).catch((error) => {
-            console.log(error);
+            throw new PageLoaderException('Error creating file', error.code);
         });
     });
 
