@@ -7,7 +7,7 @@ import downloadFiles from './downloadFiles.js';
 import changeFile from './changeFile.js';
 import debug from 'debug';
 import 'axios-debug-log';
-import {PageLoaderException} from './pageLoaderException.js';
+import PageLoaderException from './pageLoaderException.js';
 
 export default (url, arg) => {
     const log = debug('page-loader');
@@ -22,7 +22,7 @@ export default (url, arg) => {
             log(`creating and write file ${finalUrl}`);
             fsp.writeFile(finalUrl, response.data)
                 .catch((error) => {
-                    throw new PageLoaderException('Error writing file', error.code);
+                    throw new PageLoaderException(`Error writing file ${finalUrl}`, error.code);
                 });
             return response.data;
         })
@@ -35,6 +35,6 @@ export default (url, arg) => {
         .then(() => changeFile(finalUrl, fileLinks, url))
         .then (() => finalUrl)
         .catch((error) => {
-            throw new PageLoaderException('Request execution error', error.code);
+            throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
         });
 };

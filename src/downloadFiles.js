@@ -6,7 +6,7 @@ import path from 'path';
 import getDirName from "./getDirName.js";
 import 'axios-debug-log';
 import  debug  from "debug";
-import {PageLoaderException} from "./pageLoaderException.js";
+import PageLoaderException from "./pageLoaderException.js";
 
 export default (links, url, filePath) => {
 
@@ -15,7 +15,7 @@ export default (links, url, filePath) => {
     const dirFiles = path.join(filePath, dir);
     const promiseCreateDir = fsp.mkdir(dirFiles)
         .catch((error) => {
-            throw new PageLoaderException('Error creating dir', error.code);
+            throw new PageLoaderException('Error creating dir: ' + dirFiles, error.code);
         });
 
     log('download files...');
@@ -33,7 +33,7 @@ export default (links, url, filePath) => {
             response.data.pipe(file);
             return link;
         }).catch((error) => {
-            throw new PageLoaderException('Error creating file', error.code);
+            throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
         });
     });
 
