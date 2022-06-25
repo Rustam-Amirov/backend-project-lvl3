@@ -32,7 +32,7 @@ beforeAll(async () => {
     dirFiles = path.join(tempdir, dir);
 });
 
-test('download', async () => {
+test('download ok', async () => {
     _.mapKeys(links, (file, link) => {
         const urlForDownload = new URL(link, url);
         nock(url).get(urlForDownload.pathname).reply(
@@ -51,4 +51,20 @@ test('download', async () => {
         const actual = await fsp.readFile(savedPathToFile, 'binary');
         expect(actual).toBe(expected);
     });
+});
+
+test('download fail file exist', async () => {
+    _.mapKeys(links, (file, link) => {
+        const urlForDownload = new URL(link, url);
+        nock(url).get(urlForDownload.pathname).reply(
+            500
+        );
+    });
+
+    expect.assertions(1);
+    try {
+        await downloadFiles(Object.keys(links), url, tempdir);
+    } catch (e) {
+        expect(e).toEqual({code: "EEXIST", message: `Error creating dir: ${tempdir}/ru-test-com_files`});
+    }
 });

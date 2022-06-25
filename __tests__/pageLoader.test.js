@@ -32,7 +32,7 @@ test('page loader fail', async () => {
     );
     expect.assertions(1);
     try {
-        return await pageLoader(url +'/test', tempdir);
+        await pageLoader(url +'/test', tempdir);
     } catch (e) {
         expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: "Request failed with status code 500 url: https://www.test.com/test"});
     }

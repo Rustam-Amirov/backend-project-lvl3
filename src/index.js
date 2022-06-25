@@ -29,12 +29,15 @@ export default (url, arg) => {
         .then((data) => getLinks(data, url))
         .then((links) => {
             fileLinks = links;
-            downloadFiles(links, url, filePath)
             log(`download other files...`);
+            return downloadFiles(links, url, filePath)
         })
         .then(() => changeFile(finalUrl, fileLinks, url))
         .then (() => finalUrl)
         .catch((error) => {
-            throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
+            if (error.config !== undefined) {
+                throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
+            }
+            throw new PageLoaderException(error.message, error.code);
         });
 };

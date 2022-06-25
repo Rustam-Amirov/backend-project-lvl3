@@ -11,9 +11,9 @@ export default (fileName, links, url) => {
     const log = debug('page-loader');
     const newDirName = getDirName(url);
     log('read file before change links...');
+    log(fileName);
     return fsp.readFile(fileName, 'utf-8')
         .then((html) => {
-            log('success');
             log('change file...');
             const $ = cheerio.load(html); 
             $('img, link, script').each((index, element) => {
@@ -37,7 +37,6 @@ export default (fileName, links, url) => {
             log('success');
         })
         .catch((error) => {
-            console.log(error);
             throw new PageLoaderException(`Error reading file: ${fileName}`, error.code);
         });
 }

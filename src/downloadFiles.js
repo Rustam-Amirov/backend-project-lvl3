@@ -21,12 +21,13 @@ export default (links, url, filePath) => {
     log('download files...');
     const promises = links.map((link) => {
         const urlForDownload = new URL(link, url);
-        log(`make request ${urlForDownload}`);
+        log(`make request ${urlForDownload.href}`);
         return axios({
             method: 'get',
             url: urlForDownload.href,
             responseType: 'stream'
         }).then((response) => {
+            log(`save file... ${link}`);
             const newFileName = getFileName(link, url); 
             const savedPathToFile =  path.join(dirFiles, newFileName);
             const file = fs.createWriteStream(savedPathToFile);
@@ -37,5 +38,7 @@ export default (links, url, filePath) => {
         });
     });
 
-    return Promise.all(promises, promiseCreateDir);
+    return Promise.all(promises.concat(promiseCreateDir)).catch((e) => {
+        throw new PageLoaderException(e.message, e.code);
+    });
 }
