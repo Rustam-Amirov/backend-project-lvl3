@@ -7,9 +7,9 @@ import getDirName from "./getDirName.js";
 import 'axios-debug-log';
 import  debug  from "debug";
 import PageLoaderException from "./pageLoaderException.js";
+import Listr from 'listr';
 
 export default (links, url, filePath) => {
-
     const log = debug('page-loader');
     const dir = getDirName(url);
     const dirFiles = path.join(filePath, dir);
@@ -22,23 +22,31 @@ export default (links, url, filePath) => {
     const promises = links.map((link) => {
         const urlForDownload = new URL(link, url);
         log(`make request ${urlForDownload.href}`);
-        return axios({
-            method: 'get',
-            url: urlForDownload.href,
-            responseType: 'stream'
-        }).then((response) => {
-            log(`save file... ${link}`);
-            const newFileName = getFileName(link, url); 
-            const savedPathToFile =  path.join(dirFiles, newFileName);
-            const file = fs.createWriteStream(savedPathToFile);
-            response.data.pipe(file);
-            return link;
-        }).catch((error) => {
-            throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
-        });
+        return {
+            title: urlForDownload.href,
+            task: () => {
+                return axios({
+                    method: 'get',
+                    url: urlForDownload.href,
+                    responseType: 'stream'
+                }).then((response) => {
+                    log(`save file... ${link}`);
+                    const newFileName = getFileName(link, url); 
+                    const savedPathToFile =  path.join(dirFiles, newFileName);
+                    const file = fs.createWriteStream(savedPathToFile);
+                    response.data.pipe(file);
+                    return link;
+                }).catch((error) => {
+                    throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
+                });
+            } 
+        }
     });
+    const listr = new Listr(promises, {concurrent:true});
 
-    return Promise.all(promises.concat(promiseCreateDir)).catch((e) => {
+    return promiseCreateDir.then(() => {
+        return listr.run();
+    }).catch((e) => {
         throw new PageLoaderException(e.message, e.code);
     });
 }
