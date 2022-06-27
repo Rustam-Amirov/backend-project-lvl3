@@ -3,7 +3,7 @@ lint:
 lint-fix:
 	npx eslint . --fix
 test:
-	DEBUG=axios npx jest
+	DEBUG=page-loader npx jest
 test-coverage:
 	npm test -- --coverage --coverageProvider=v8
 install:
