@@ -1,13 +1,13 @@
-import getFileName from './getFileName.js';
+import getFileName from './src/getFileName.js';
 import axios from 'axios';
 import fsp from 'fs/promises';
 import process from 'process';
-import getLinks from './getLinks.js';
-import downloadFiles from './downloadFiles.js';
-import changeFile from './changeFile.js';
+import getLinks from './src/getLinks.js';
+import downloadFiles from './src/downloadFiles.js';
+import changeFile from './src/changeFile.js';
 import debug from 'debug';
 import 'axios-debug-log';
-import PageLoaderException from './pageLoaderException.js';
+import PageLoaderException from './src/pageLoaderException.js';
 
 export default (url, arg) => {
     const log = debug('page-loader');

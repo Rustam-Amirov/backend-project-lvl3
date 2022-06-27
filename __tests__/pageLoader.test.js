@@ -1,4 +1,4 @@
-import pageLoader from '../src/index.js';
+import pageLoader from '../index.js';
 import { test, expect, beforeEach} from '@jest/globals';
 import nock from 'nock';
 import fsp from 'fs/promises';
