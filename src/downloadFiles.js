@@ -37,6 +37,7 @@ export default (links, url, filePath) => {
                     response.data.pipe(file);
                     return link;
                 }).catch((error) => {
+                    log(`${error.message} url: ${error.config.url}`);
                     throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
                 });
             } 
@@ -45,7 +46,9 @@ export default (links, url, filePath) => {
     const listr = new Listr(promises, {concurrent:true});
 
     return promiseCreateDir.then(() => {
-        return listr.run();
+        return listr.run().catch((e) => {
+            throw new PageLoaderException(e.message, e.code);
+        });
     }).catch((e) => {
         throw new PageLoaderException(e.message, e.code);
     });

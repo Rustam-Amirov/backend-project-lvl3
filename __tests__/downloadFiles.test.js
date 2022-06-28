@@ -68,3 +68,22 @@ test('download fail file exist', async () => {
         expect(e).toEqual({code: "EEXIST", message: `Error creating dir: ${tempdir}/ru-test-com_files`});
     }
 });
+
+test('download fail incorrect url', async () => {
+
+    const tempdir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
+
+    _.mapKeys(links, (file, link) => {
+        const urlForDownload = new URL(link, url);
+        nock(url).get(urlForDownload.pathname).reply(
+            500
+        );
+    });
+
+    expect.assertions(1);
+    try {
+        return await downloadFiles(Object.keys(links), url, tempdir);
+    } catch (e) {
+        expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: `Request failed with status code 500 url: https://ru.test.com/assets/application.css`});
+    }
+});
