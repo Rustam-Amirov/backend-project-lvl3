@@ -82,7 +82,7 @@ test('download fail incorrect url', async () => {
 
     expect.assertions(1);
     try {
-        return await downloadFiles(Object.keys(links), url, tempdir);
+        await downloadFiles(Object.keys(links), url, tempdir);
     } catch (e) {
         expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: `Request failed with status code 500 url: https://ru.test.com/assets/application.css`});
     }

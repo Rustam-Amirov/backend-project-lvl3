@@ -17,7 +17,7 @@ const comandInterface = () => {
                 console.log('open '+ result);
             } catch (e) {
                 console.error(e.message);
-                process.exit(e.code);
+                process.exit(1);
             }
         });
     program.parse();
