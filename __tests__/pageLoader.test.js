@@ -37,3 +37,14 @@ test('page loader fail', async () => {
         expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: "Request failed with status code 500 url: https://www.test.com/test"});
     }
 });
+
+
+test('page loader fail2', async () => {
+    nock(url).get('/test').reply(201);
+    expect.assertions(1);
+    try {
+        await pageLoader(url +'/test', tempdir);
+    } catch (e) {
+        expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: "url: https://www.test.com/test returned 201"});
+    }
+});

@@ -30,6 +30,9 @@ export default (links, url, filePath) => {
                     url: urlForDownload.href,
                     responseType: 'stream'
                 }).then((response) => {
+                    if (response.status !== 200) {
+                        throw new PageLoaderException(`url: ${response.config.url} returned ${response.status}`, 'ERR_BAD_RESPONSE');
+                    }
                     log(`save file... ${link}`);
                     const newFileName = getFileName(link, url); 
                     const savedPathToFile =  path.join(dirFiles, newFileName);

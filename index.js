@@ -19,6 +19,9 @@ export default (url, arg) => {
     log(`doing request: ${url}`);
     return axios.get(url)
         .then((response) => {
+            if (response.status !== 200) {
+                throw new PageLoaderException(`url: ${response.config.url} returned ${response.status}`, 'ERR_BAD_RESPONSE');
+            }
             log(`creating and write file ${finalUrl}`);
             fsp.writeFile(finalUrl, response.data)
                 .catch((error) => {
