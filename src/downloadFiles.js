@@ -46,9 +46,7 @@ export default (links, url, filePath) => {
     const listr = new Listr(promises, {concurrent:true});
 
     return promiseCreateDir.then(() => {
-        return listr.run().catch((e) => {
-            throw new PageLoaderException(e.message, e.code);
-        });
+        return listr.run();
     }).catch((e) => {
         throw new PageLoaderException(e.message, e.code);
     });
