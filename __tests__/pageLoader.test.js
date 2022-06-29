@@ -48,3 +48,15 @@ test('page loader fail2', async () => {
         expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: "url: https://www.test.com/test returned 201"});
     }
 });
+
+
+test('page loader fail2', async () => {
+
+    const url = 'test.ru';
+    expect.assertions(1);
+    try {
+        await pageLoader(url, tempdir);
+    } catch (e) {
+        expect(e).toEqual({code: "ERR_INVALID_URL", message: "INVALID URL test.ru"});
+    }
+});
