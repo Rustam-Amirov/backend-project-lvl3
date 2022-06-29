@@ -11,6 +11,11 @@ import PageLoaderException from './src/pageLoaderException.js';
 
 export default (url, arg) => {
     const log = debug('page-loader');
+    try {
+        new URL(url);
+    } catch (e) {
+        throw new PageLoaderException(`INVALID URL ${url}`, 'ERR_INVALID_URL');
+    }
     const filePath = arg === '/home/user/current-dir' ? process.cwd() : arg;
     const fileName = getFileName(url);
     const finalUrl = filePath + '/' + fileName;

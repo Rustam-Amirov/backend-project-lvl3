@@ -20,7 +20,12 @@ export default (links, url, filePath) => {
 
     log('download files...');
     const promises = links.map((link) => {
-        const urlForDownload = new URL(link, url);
+        let urlForDownload;
+        try {
+            urlForDownload = new URL(link, url);
+        } catch (e) {
+            throw new PageLoaderException(`INVALID URL ${url}`, 'ERR_INVALID_URL');
+        }
         log(`make request ${urlForDownload.href}`);
         return {
             title: urlForDownload.href,
