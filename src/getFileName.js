@@ -1,5 +1,4 @@
 import path from 'path';
-import { exit } from 'process';
 import PageLoaderException from './pageLoaderException.js';
 export default (url, mainUrl, end = '') => {
     const dir = path.parse(url);
