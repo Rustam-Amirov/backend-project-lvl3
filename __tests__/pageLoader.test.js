@@ -49,3 +49,25 @@ test('page loader fail2', async () => {
         expect(e).toEqual({code: "ERR_INVALID_URL", message: "INVALID URL test.ru"});
     }
 });
+
+test('page loader fail3', async () => {
+
+    const url = 'http://localhost';
+    expect.assertions(1);
+    try {
+        await pageLoader(url, tempdir);
+    } catch (e) {
+        expect(e).toEqual({code: "ECONNREFUSED", message: "connect ECONNREFUSED 127.0.0.1:80 url: http://localhost"});
+    }
+});
+
+test('page loader fail3', async () => {
+
+    const url = 'https://dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru/';
+    expect.assertions(1);
+    try {
+        await pageLoader(url, tempdir);
+    } catch (e) {
+        expect(e).toEqual({code: "ENOTFOUND", message: "getaddrinfo ENOTFOUND dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru url: https://dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru/"});
+    }
+});
