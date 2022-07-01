@@ -8,6 +8,7 @@ import 'axios-debug-log';
 import  debug  from "debug";
 import PageLoaderException from "./pageLoaderException.js";
 import Listr from 'listr';
+import getLink from "./getLink.js";
 
 export default (links, url, filePath) => {
     const log = debug('page-loader');
@@ -20,19 +21,14 @@ export default (links, url, filePath) => {
 
     log('download files...');
     const promises = links.map((link) => {
-        let urlForDownload;
-        try {
-            urlForDownload = new URL(link, url);
-        } catch (e) {
-            throw new PageLoaderException(`INVALID URL ${url}`, 'ERR_INVALID_URL');
-        }
-        log(`make request ${urlForDownload.href}`);
+        let urlForDownload = getLink(link, url);
+        log(`make request ${urlForDownload}`);
         return {
-            title: urlForDownload.href,
+            title: urlForDownload,
             task: () => {
                 return axios({
                     method: 'get',
-                    url: urlForDownload.href,
+                    url: urlForDownload,
                     responseType: 'stream'
                 }).then((response) => {
                     if (response.status !== 200) {

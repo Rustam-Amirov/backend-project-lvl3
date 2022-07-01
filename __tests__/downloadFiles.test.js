@@ -18,11 +18,13 @@ const getFixturePath = (filename = '') => path.join(__dirname, '..', '__fixtures
 const url = 'https://ru.test.com';
 let tempdir;
 let dirFiles;
+let eachTempDir;
+let eachDirFiles;
 
 const links = {
     '/assets/application.css':                  "style.css",
     '/courses':                                 "index.html",
-    '/assets/professions/nodejs.png':           "image.png",
+    '/assets/professions/nodejs.png':            "image.png",
     'https://ru.test.com/packs/js/runtime.js':  "script.js"
 };
 
@@ -31,6 +33,12 @@ beforeAll(async () => {
     const dir = getDirName(url);
     dirFiles = path.join(tempdir, dir);
 });
+
+beforeEach(async() => {
+    eachTempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
+    const dir = getDirName(url);
+    eachDirFiles = path.join(tempdir, dir);
+})
 
 test('download ok', async () => {
     _.mapKeys(links, (file, link) => {
@@ -66,23 +74,5 @@ test('download fail file exist', async () => {
         await downloadFiles(Object.keys(links), url, tempdir);
     } catch (e) {
         expect(e).toEqual({code: "EEXIST", message: `Error creating dir: ${tempdir}/ru-test-com_files`});
-    }
-});
-
-test('download fail incorrect url', async () => {
-
-    const tempdir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
-    const link = '/assets/professions/nodejs.png';
-
-    nock(url).get(link).reply(
-        500
-    );
-
-    expect.assertions(1);
-
-    try {
-        await downloadFiles([link], url, tempdir);
-    } catch (e) {
-        expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: `Request failed with status code 500 url: https://ru.test.com/assets/professions/nodejs.png`});
     }
 });

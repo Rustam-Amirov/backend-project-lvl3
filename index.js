@@ -30,6 +30,7 @@ export default (url, arg) => {
             log(`creating and write file ${finalUrl}`);
             fsp.writeFile(finalUrl, response.data)
                 .catch((error) => {
+                    log(`Error writing file ${finalUrl}`);
                     throw new PageLoaderException(`Error writing file ${finalUrl}`, error.code);
                 });
             return response.data;
@@ -44,8 +45,10 @@ export default (url, arg) => {
         .then (() => finalUrl)
         .catch((error) => {
             if (error.config !== undefined) {
+                log(`${error.message} url: ${error.config.url}`);
                 throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
             }
+            log(error.message);
             throw new PageLoaderException(error.message, error.code);
         });
 };
