@@ -1,4 +1,5 @@
 import getLink from "../src/getLink";
+import { test, expect } from '@jest/globals';
 
 test('test 1', () => {
     const url = 'https://myproject.com';
