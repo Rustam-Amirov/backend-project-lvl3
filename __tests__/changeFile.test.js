@@ -9,7 +9,7 @@ import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const getFixturePath = (filename = '') => path.join(__dirname, '..', '__fixtures__', filename);
-const url = "https://ru.test.com";
+const url = "https://ru.test.com/test";
 let expected;
 let dest;
 let tempdir;
@@ -18,7 +18,7 @@ const fileName = 'before.html';
 const links = [
     '/assets/application.css',
     '/courses',
-    '/assets/professions/nodejs.png',
+    'assets/professions/nodejs.png',
     'https://ru.test.com/packs/js/runtime.js'
 ];
 

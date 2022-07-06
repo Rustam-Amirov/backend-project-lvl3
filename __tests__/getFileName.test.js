@@ -21,3 +21,9 @@ test('path2', () => {
     const fileName = getFileName('/assets/application.css', url);
     expect(fileName).toEqual('ru-test-com-assets-application.css');
 });
+
+test('local file', () => {
+    const url = "https://ru.test.com/test";
+    const fileName = getFileName('assets/application.css', url);
+    expect(fileName).toEqual('ru-test-com-test-assets-application.css');
+});

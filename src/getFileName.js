@@ -1,12 +1,10 @@
 import path from 'path';
 import PageLoaderException from './pageLoaderException.js';
-export default (url, mainUrl, end = '') => {
+export default (url, mainUrl) => {
     const dir = path.parse(url);
     let ext;
-    if (dir.ext.length < 1 && end.length < 1) {
-       ext = '.html';
-    } else if (end.length >= 1) {
-        ext = end;
+    if (dir.ext.length < 1) {
+        ext = '.html';
     } else {
         ext = dir.ext;
     }
