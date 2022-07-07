@@ -18,7 +18,7 @@ const fileName = 'before.html';
 const links = [
     '/assets/application.css',
     '/courses',
-    'assets/professions/nodejs.png',
+    '/assets/professions/nodejs.png',
     'https://ru.test.com/packs/js/runtime.js'
 ];
 
