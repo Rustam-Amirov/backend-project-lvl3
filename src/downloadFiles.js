@@ -41,7 +41,7 @@ export default (links, url, filePath) => {
                     response.data.pipe(file);
                     return link;
                 }).catch((error) => {
-                    log(`${error.message} url: ${error.config.url}`);
+                    log(`erorr in downloadFiles: ${error.message} url: ${error.config.url}`);
                     throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
                 });
             } 
