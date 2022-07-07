@@ -31,7 +31,9 @@ export default (links, url, filePath) => {
                     url: urlForDownload,
                     responseType: 'stream'
                 }).then((response) => {
-                    if (response.status !== 200) {
+                    if (response === undefined) {
+                        throw new PageLoaderException(`NO Response for ${link}`, 'ENOTFOUND');
+                    } else if (response.status !== 200) {
                         log(`error in downloadFiles.js with ${response.config.url} returned ${response.status}`);
                         throw new PageLoaderException(`url: ${response.config.url} returned ${response.status}`, 'ERR_BAD_RESPONSE');
                     }

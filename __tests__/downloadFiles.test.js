@@ -70,7 +70,7 @@ test('download ok', async () => {
     }
 });
 
-/*test('download fail incorrect url', async () => {
+test('download fail incorrect url', async () => {
 
     const link = '/assets/professions/nodejs.png';
     const  eachTempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
@@ -85,5 +85,4 @@ test('download ok', async () => {
         expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: `Request failed with status code 500 url: https://ru.test.com/assets/professions/nodejs.png`});
     }
     expect.assertions(1);
-});
-*/
+});*/

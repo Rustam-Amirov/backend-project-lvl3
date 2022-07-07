@@ -50,3 +50,13 @@ test('page loader fail2', async () => {
     }
 });
 
+test('page loader fail3', async () => {
+
+    const url = 'https://dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru/';
+    expect.assertions(1);
+    try {
+        await pageLoader(url, tempdir);
+    } catch (e) {
+        expect(e).toEqual({code: "ENOTFOUND", message: "getaddrinfo ENOTFOUND dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru url: https://dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru/"});
+    }
+});
