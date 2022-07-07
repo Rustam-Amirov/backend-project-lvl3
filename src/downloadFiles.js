@@ -32,6 +32,7 @@ export default (links, url, filePath) => {
                     responseType: 'stream'
                 }).then((response) => {
                     if (response.status !== 200) {
+                        log(`error in downloadFiles.js with ${response.config.url} returned ${response.status}`);
                         throw new PageLoaderException(`url: ${response.config.url} returned ${response.status}`, 'ERR_BAD_RESPONSE');
                     }
                     log(`save file... ${link}`);
@@ -41,7 +42,8 @@ export default (links, url, filePath) => {
                     response.data.pipe(file);
                     return link;
                 }).catch((error) => {
-                    log(`erorr in downloadFiles: ${error.message} url: ${error.config.url}`);
+                    log('error in downloadFiles.js');
+                    log(`${error.message} url: ${error.config.url}`);
                     throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
                 });
             } 
