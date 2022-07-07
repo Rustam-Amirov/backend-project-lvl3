@@ -29,7 +29,8 @@ export default (links, url, filePath) => {
                 return axios({
                     method: 'get',
                     url: urlForDownload,
-                    responseType: 'stream'
+                    responseType: 'stream',
+                    timeout: 1000,
                 }).then((response) => {
                     if (response.status !== 200) {
                         log(`error in downloadFiles.js with ${response.config.url} returned ${response.status}`);
