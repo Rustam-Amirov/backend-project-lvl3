@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-
+import _ from 'lodash';
 export default (html, url) => {
     const $ = cheerio.load(html);
     const links = [];
@@ -11,7 +11,11 @@ export default (html, url) => {
         }
     });
     return links.filter((link) => {
-        const currentLink = new URL(link, url);
-        return currentLink.origin === url;
+        if( _.startsWith(link, 'http')) {
+            const currentLink = new URL(link);
+            return currentLink.origin === url;
+        } else {
+            return true;
+        }
     });
 }

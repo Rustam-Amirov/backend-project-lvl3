@@ -41,10 +41,9 @@ export default (links, url, filePath) => {
                     const file = fs.createWriteStream(savedPathToFile);
                     response.data.pipe(file);
                     return link;
-                }).catch((error) => {
-                    log('error in downloadFiles.js');
-                    log(`${error.message} url: ${error.config.url}`);
-                    throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
+                }).catch((e) => {
+                    log(`${e.message} url: ${e.config.url}`);
+                    throw new PageLoaderException(`${e.message} url: ${e.config.url}`, e.code);
                 });
             } 
         }
