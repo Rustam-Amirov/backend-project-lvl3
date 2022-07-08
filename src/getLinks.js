@@ -14,8 +14,13 @@ export default (html, url) => {
         if( _.startsWith(link, 'http')) {
             const currentLink = new URL(link);
             return currentLink.origin === url;
+        } else if  (_.startsWith(link, '/')) {
+            const currentLink = new URL(link, url);
+            return currentLink.origin === url;
         } else {
-            return true;
+            const fullUrl = url + '/' + link;
+            const currentLink = new URL(fullUrl);
+            return currentLink.origin === url;
         }
     });
 }
