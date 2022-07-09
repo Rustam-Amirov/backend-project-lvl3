@@ -1,5 +1,4 @@
 import * as cheerio from 'cheerio';
-import _ from 'lodash';
 export default (html, url) => {
     const $ = cheerio.load(html);
     const searchElements = {

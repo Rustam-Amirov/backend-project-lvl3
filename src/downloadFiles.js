@@ -48,7 +48,7 @@ export default (links, url, filePath) => {
             } 
         }
     });
-    const listr = new Listr(promises, {concurrent:true});
+    const listr = new Listr(promises, {concurrent:true, exitOnError: false});
 
     return promiseCreateDir.then(() => {
         return listr.run();
