@@ -15,12 +15,9 @@ export default (html, url) => {
         }
     });
 
+    const baseUrl = new URL(url);
     return links.filter((link) => {
-        if( _.startsWith(link, 'http')) {
-            const currentLink = new URL(link);
-            return currentLink.origin === url;
-        } else {
-            return true;
-        }
+        const currentLink = new URL(link, baseUrl);
+        return currentLink.host === baseUrl.host;
     });
 }
