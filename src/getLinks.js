@@ -17,6 +17,6 @@ export default (html, url) => {
     const baseUrl = new URL(url);
     return links.filter((link) => {
         const currentLink = new URL(link, baseUrl);
-        return currentLink.host === baseUrl.host;
+        return currentLink.hostname === baseUrl.hostname;
     });
 }
