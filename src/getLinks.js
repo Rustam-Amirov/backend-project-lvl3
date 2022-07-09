@@ -9,7 +9,7 @@ export default (html, url) => {
     const links = [];
     $('img, link, script').each((index, element) => {
         const currentTag = $(element).prop("tagName").toLowerCase();
-        if ($(element).attr(searchElements[currentTag]) !== undefined) {
+        if ($(element).attr(searchElements[currentTag])) {
             links[index] = $(element).attr(searchElements[currentTag]);
         }
     });
