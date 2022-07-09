@@ -10,7 +10,7 @@ export default (html, url) => {
     $('img, link, script').each((index, element) => {
         const currentTag = $(element).prop("tagName").toLowerCase();
         if ($(element).attr(searchElements[currentTag])) {
-            links[index] = $(element).attr(searchElements[currentTag]);
+            links.push($(element).attr(searchElements[currentTag]));
         }
     });
 
