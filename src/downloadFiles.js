@@ -1,5 +1,4 @@
 import axios from "axios";
-import fs from 'fs';
 import fsp from 'fs/promises'
 import getFileName from "./getFileName.js";
 import path from 'path';
@@ -37,12 +36,11 @@ export default (links, url, filePath) => {
                     log(`save file... ${link}`);
                     const newFileName = getFileName(link, url); 
                     const savedPathToFile =  path.join(dirFiles, newFileName);
-                    const file = fs.createWriteStream(savedPathToFile);
-                    response.data.pipe(file);
+                    fsp.writeFile(savedPathToFile, response.data);
                     return link;
-                }).catch((e) => {
-                    log(`${e.message} url: ${e.config.url}`);
-                    throw new Error(`${e.message} url: ${e.config.url}`);
+                }).catch((error) => {
+                    log(`${error.message}`);
+                    throw error;
                 });
             } 
         }

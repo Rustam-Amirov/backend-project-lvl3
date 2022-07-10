@@ -31,12 +31,6 @@ export default (url, arg) => {
             }
             return response.data;
         })
-        /*.then((data) => {
-            fsp.access(finalUrl, constants.W_OK).catch((e) => {
-                throw e;
-            })
-            return data;
-        })*/
         .then ((data) => {
             log(`creating and write file ${finalUrl}`);
             fsp.writeFile(finalUrl, data)
