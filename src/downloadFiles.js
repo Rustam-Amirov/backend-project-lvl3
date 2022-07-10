@@ -13,8 +13,8 @@ export default (links, url, filePath) => {
     const dir = getDirName(url);
     const dirFiles = path.join(filePath, dir);
     const promiseCreateDir = fsp.mkdir(dirFiles)
-        .catch(() => {
-            throw new Error('Error creating dir: ' + dirFiles);
+        .catch((e) => {
+            throw e;
         });
 
     log('download files...');

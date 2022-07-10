@@ -17,7 +17,7 @@ export default (url, arg) => {
     const finalUrl = filePath + '/' + fileName;
     let fileLinks;
 
-    const permissions = fsp.access(arg, constants.W_OK).catch((e) => {
+    const permissions = fsp.access(arg, constants.W_OK | constants.R_OK).catch((e) => {
        throw e;
     });
 
