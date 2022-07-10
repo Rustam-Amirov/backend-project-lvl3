@@ -1,6 +1,7 @@
 import getFileName from './src/getFileName.js';
 import axios from 'axios';
 import fsp from 'fs/promises';
+import constants from 'fs/promises';
 import process from 'process';
 import getLinks from './src/getLinks.js';
 import downloadFiles from './src/downloadFiles.js';
@@ -16,15 +17,27 @@ export default (url, arg) => {
     const finalUrl = filePath + '/' + fileName;
     let fileLinks;
 
+    const permissions = fsp.access(arg, constants.W_OK).catch((e) => {
+       throw e;
+    });
+
     log(`doing request: ${baseUrl.href}`);
-    return axios.get(baseUrl.href)
+    return permissions.then(() => {
+            return axios.get(baseUrl.href)
+        })
         .then((response) => {
             if (response.status !== 200) {
                 throw new Error(`url: ${response.config.url} returned ${response.status}`);
             }
             return response.data;
         })
-        .then((data) => {
+        /*.then((data) => {
+            fsp.access(finalUrl, constants.W_OK).catch((e) => {
+                throw e;
+            })
+            return data;
+        })*/
+        .then ((data) => {
             log(`creating and write file ${finalUrl}`);
             fsp.writeFile(finalUrl, data)
                 .catch((error) => {
@@ -42,7 +55,7 @@ export default (url, arg) => {
         .then(() => changeFile(finalUrl, fileLinks, baseUrl.href))
         .then (() => finalUrl)
         .catch((error) => {
-            log(`${error.message} url: ${error.config.url}`);
+            log(`${error.message}`);
             if (error.isAxiosError) {
                 if (error.response) {
                     throw new Error(`'${error.config.url}' request failed with status code ${error.response.status}`);
