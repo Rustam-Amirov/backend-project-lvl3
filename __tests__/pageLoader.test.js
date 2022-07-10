@@ -39,17 +39,6 @@ test('page loader fail', async () => {
 });
 
 
-test('page loader fail2', async () => {
-
-    const url = 'test.ru';
-    expect.assertions(1);
-    try {
-        await pageLoader(url, tempdir);
-    } catch (e) {
-        expect(e).toEqual({code: "ERR_INVALID_URL", message: "INVALID URL test.ru"});
-    }
-});
-
 test('page loader fail3', async () => {
 
     const url = 'https://dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru/';

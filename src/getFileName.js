@@ -19,5 +19,5 @@ export default (link, mainUrl) => {
 
     const pathNameWithouExt = newUrl.pathname.substring(0, newUrl.pathname.indexOf('.'));
     const pathUrl =  pathNameWithouExt.length > 0 ? pathNameWithouExt : newUrl.pathname;
-    return (newUrl.host + pathUrl).replace(/[^a-z0-9\s]/gi, '-')+ext;
+    return (newUrl.host + pathUrl).replace(/\W/gi, '-')+ext;
 }

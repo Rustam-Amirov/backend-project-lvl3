@@ -11,22 +11,16 @@ import PageLoaderException from './src/pageLoaderException.js';
 
 export default (url, arg) => {
     const log = debug('page-loader');
-    try {
-        new URL(url);
-    } catch (e) {
-        throw new PageLoaderException(`INVALID URL ${url}`, 'ERR_INVALID_URL');
-    }
+    const baseUrl = new URL(url);
     const filePath = arg === '/home/user/current-dir' ? process.cwd() : arg;
-    const fileName = getFileName(url);
+    const fileName = getFileName(baseUrl.href);
     const finalUrl = filePath + '/' + fileName;
     let fileLinks;
 
-    log(`doing request: ${url}`);
-    return axios.get(url)
+    log(`doing request: ${baseUrl.href}`);
+    return axios.get(baseUrl.href)
         .then((response) => {
-            if (response === undefined) {
-                throw new PageLoaderException(`NO Response url: ${url}`, 'ENOTFOUND');
-            } else if (response.status !== 200) {
+            if (response.status !== 200) {
                 throw new PageLoaderException(`url: ${response.config.url} returned ${response.status}`, 'ERR_BAD_RESPONSE');
             }
             log(`creating and write file ${finalUrl}`);
@@ -37,13 +31,13 @@ export default (url, arg) => {
                 });
             return response.data;
         })
-        .then((data) => getLinks(data, url))
+        .then((data) => getLinks(data, baseUrl.href))
         .then((links) => {
             fileLinks = links;
             log(`download other files...`);
-            return downloadFiles(links, url, filePath)
+            return downloadFiles(links, baseUrl.href, filePath)
         })
-        .then(() => changeFile(finalUrl, fileLinks, url))
+        .then(() => changeFile(finalUrl, fileLinks, baseUrl.href))
         .then (() => finalUrl)
         .catch((error) => {
             if (error.config !== undefined) {
