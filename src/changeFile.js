@@ -4,7 +4,6 @@ import getDirName from './getDirName.js';
 import fsp from 'fs/promises';
 import path from 'path';
 import debug from 'debug';
-import PageLoaderException from './pageLoaderException.js';
 
 export default (fileName, links, url) => {
 
@@ -31,12 +30,12 @@ export default (fileName, links, url) => {
         .then(($) => {
             log('write file...');
             fsp.writeFile(fileName, $.html())
-                .catch((error) => {
-                    throw new PageLoaderException(`Error writing file: ${fileName}`, error.code);
+                .catch(() => {
+                    throw new Error(`Error writing file: ${fileName}`);
                 });
             log('success');
         })
-        .catch((error) => {
-            throw new PageLoaderException(`Error reading file: ${fileName}`, error.code);
+        .catch(() => {
+            throw new Error(`Error reading file: ${fileName}`);
         });
 }

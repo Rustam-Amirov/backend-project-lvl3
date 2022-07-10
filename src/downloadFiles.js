@@ -6,7 +6,6 @@ import path from 'path';
 import getDirName from "./getDirName.js";
 import 'axios-debug-log';
 import  debug  from "debug";
-import PageLoaderException from "./pageLoaderException.js";
 import Listr from 'listr';
 import getLink from "./getLink.js";
 
@@ -15,8 +14,8 @@ export default (links, url, filePath) => {
     const dir = getDirName(url);
     const dirFiles = path.join(filePath, dir);
     const promiseCreateDir = fsp.mkdir(dirFiles)
-        .catch((error) => {
-            throw new PageLoaderException('Error creating dir: ' + dirFiles, error.code);
+        .catch(() => {
+            throw new Error('Error creating dir: ' + dirFiles);
         });
 
     log('download files...');
@@ -33,7 +32,7 @@ export default (links, url, filePath) => {
                 }).then((response) => {
                     if (response.status !== 200) {
                         log(`error in downloadFiles.js with ${response.config.url} returned ${response.status}`);
-                        throw new PageLoaderException(`url: ${response.config.url} returned ${response.status}`, 'ERR_BAD_RESPONSE');
+                        throw new Error(`url: ${response.config.url} returned ${response.status}`);
                     }
                     log(`save file... ${link}`);
                     const newFileName = getFileName(link, url); 
@@ -43,7 +42,7 @@ export default (links, url, filePath) => {
                     return link;
                 }).catch((e) => {
                     log(`${e.message} url: ${e.config.url}`);
-                    throw new PageLoaderException(`${e.message} url: ${e.config.url}`, e.code);
+                    throw new Error(`${e.message} url: ${e.config.url}`);
                 });
             } 
         }
@@ -53,6 +52,6 @@ export default (links, url, filePath) => {
     return promiseCreateDir.then(() => {
         return listr.run();
     }).catch((e) => {
-        throw new PageLoaderException(e.message, e.code);
+        throw e;
     });
 }

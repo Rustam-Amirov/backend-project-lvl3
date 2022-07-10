@@ -27,25 +27,14 @@ test('page loader ok', async () => {
 
 
 test('page loader fail', async () => {
-    nock(url).get('/test').reply(
-        500
-    );
+    nock(url).get('/test').reply(500);
     expect.assertions(1);
-    try {
-        await pageLoader(url +'/test', tempdir);
-    } catch (e) {
-        expect(e).toEqual({code: "ERR_BAD_RESPONSE", message: "Request failed with status code 500 url: https://www.test.com/test"});
-    }
+    await expect(pageLoader(url +'/test', tempdir)).rejects.toThrow("'https://www.test.com/test' request failed with status code 500");
 });
 
 
 test('page loader fail3', async () => {
-
-    const url = 'https://dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru/';
+    nock(url).get('/test').replyWithError('Wrong url!');
     expect.assertions(1);
-    try {
-        await pageLoader(url, tempdir);
-    } catch (e) {
-        expect(e).toEqual({code: "ENOTFOUND", message: "getaddrinfo ENOTFOUND dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru url: https://dfdfdfdfdfsdfasdgfhasatsasdfsdasdfasdfasdfasd.ru/"});
-    }
+    await expect(pageLoader(url+'/test', tempdir)).rejects.toThrow('The request was made at https://www.test.com/test but no response was received');
 });

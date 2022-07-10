@@ -7,7 +7,6 @@ import downloadFiles from './src/downloadFiles.js';
 import changeFile from './src/changeFile.js';
 import debug from 'debug';
 import 'axios-debug-log';
-import PageLoaderException from './src/pageLoaderException.js';
 
 export default (url, arg) => {
     const log = debug('page-loader');
@@ -21,15 +20,18 @@ export default (url, arg) => {
     return axios.get(baseUrl.href)
         .then((response) => {
             if (response.status !== 200) {
-                throw new PageLoaderException(`url: ${response.config.url} returned ${response.status}`, 'ERR_BAD_RESPONSE');
+                throw new Error(`url: ${response.config.url} returned ${response.status}`);
             }
+            return response.data;
+        })
+        .then((data) => {
             log(`creating and write file ${finalUrl}`);
-            fsp.writeFile(finalUrl, response.data)
+            fsp.writeFile(finalUrl, data)
                 .catch((error) => {
                     log(`Error writing file ${finalUrl}`);
-                    throw new PageLoaderException(`Error writing file ${finalUrl}`, error.code);
+                    throw error;
                 });
-            return response.data;
+            return data;
         })
         .then((data) => getLinks(data, baseUrl.href))
         .then((links) => {
@@ -40,11 +42,13 @@ export default (url, arg) => {
         .then(() => changeFile(finalUrl, fileLinks, baseUrl.href))
         .then (() => finalUrl)
         .catch((error) => {
-            if (error.config !== undefined) {
-                log(`${error.message} url: ${error.config.url}`);
-                throw new PageLoaderException(`${error.message} url: ${error.config.url}`, error.code);
+            log(`${error.message} url: ${error.config.url}`);
+            if (error.isAxiosError) {
+                if (error.response) {
+                    throw new Error(`'${error.config.url}' request failed with status code ${error.response.status}`);
+                }
+                throw new Error(`The request was made at ${error.config.url} but no response was received`);
             }
-            log(error.message);
-            throw new PageLoaderException(error.message, error.code);
+            throw error;
         });
 };
