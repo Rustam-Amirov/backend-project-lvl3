@@ -13,18 +13,17 @@ export default (url, arg) => {
     const log = debug('page-loader');
     const baseUrl = new URL(url);
     const filePath = arg === '/home/user/current-dir' ? process.cwd() : arg;
-    const fileName = getFileName(baseUrl.href);
+    const fileName = getFileName(url, url, false);
     const finalUrl = filePath + '/' + fileName;
     let fileLinks;
 
+    
     const permissions = fsp.access(arg, constants.W_OK | constants.R_OK).catch((e) => {
        throw e;
     });
 
     log(`doing request: ${baseUrl.href}`);
-    return permissions.then(() => {
-            return axios.get(baseUrl.href)
-        })
+    return axios.get(baseUrl.href)
         .then((response) => {
             if (response.status !== 200) {
                 throw new Error(`url: ${response.config.url} returned ${response.status}`);
@@ -56,6 +55,7 @@ export default (url, arg) => {
                 }
                 throw new Error(`The request was made at ${error.config.url} but no response was received`);
             }
+            throw new Error(error.message);
             throw error;
         });
 };
