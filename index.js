@@ -23,7 +23,9 @@ export default (url, arg) => {
     });
 
     log(`doing request: ${baseUrl.href}`);
-    return axios.get(baseUrl.href)
+    return permissions.then(() => {
+            return axios.get(baseUrl.href)
+        })
         .then((response) => {
             if (response.status !== 200) {
                 throw new Error(`url: ${response.config.url} returned ${response.status}`);
@@ -55,7 +57,6 @@ export default (url, arg) => {
                 }
                 throw new Error(`The request was made at ${error.config.url} but no response was received`);
             }
-            throw new Error(error.message);
             throw error;
         });
 };
