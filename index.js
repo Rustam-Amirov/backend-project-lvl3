@@ -7,6 +7,8 @@ import getLinks from './src/getLinks.js';
 import downloadFiles from './src/downloadFiles.js';
 import changeFile from './src/changeFile.js';
 import debug from 'debug';
+import path from 'path';
+import getDirName from "./src/getDirName.js";
 import 'axios-debug-log';
 
 export default (url, arg) => {
@@ -17,22 +19,18 @@ export default (url, arg) => {
     const finalUrl = filePath + '/' + fileName;
     let fileLinks;
 
+    const dir = getDirName(baseUrl.href);
+    const dirFiles = path.join(filePath, dir);
     
-    const permissions = fsp.access(arg, constants.W_OK | constants.R_OK).catch((e) => {
-       throw e;
-    });
-
     log(`doing request: ${baseUrl.href}`);
-    return permissions.then(() => {
-            return axios.get(baseUrl.href)
-        })
+    return axios.get(baseUrl.href)
         .then((response) => {
             if (response.status !== 200) {
                 throw new Error(`url: ${response.config.url} returned ${response.status}`);
             }
             return response.data;
         })
-        .then ((data) => {
+        .then((data) => {
             log(`creating and write file ${finalUrl}`);
             fsp.writeFile(finalUrl, data)
                 .catch((error) => {
@@ -41,17 +39,21 @@ export default (url, arg) => {
                 });
             return data;
         })
-        .then((data) => getLinks(data, baseUrl.href))
-        .then((links) => {
-            fileLinks = links;
+        .then((data) => {
+            fileLinks = getLinks(data, baseUrl.href);
+            return fsp.access(dirFiles, constants.W_OK).catch(() =>  {
+                return fsp.mkdir(dirFiles);
+            });
+        })
+        .then(() => {
             log(`download other files...`);
-            return downloadFiles(links, baseUrl.href, filePath)
+            return downloadFiles(fileLinks, baseUrl.href, dirFiles)
         })
         .then(() => changeFile(finalUrl, fileLinks, baseUrl.href))
         .then (() => finalUrl)
         .catch((error) => {
             log(`${error.message}`);
-            if (error.isAxiosError) {
+            if (error.config) {
                 if (error.response) {
                     throw new Error(`'${error.config.url}' request failed with status code ${error.response.status}`);
                 }

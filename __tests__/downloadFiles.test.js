@@ -8,7 +8,6 @@ import path from 'path';
 import nock from 'nock';
 import downloadFiles from '../src/downloadFiles.js';
 import _ from 'lodash';
-import getDirName from '../src/getDirName.js';
 import getFileName from '../src/getFileName.js';
 import getLink from '../src/getLink.js';
 
@@ -18,7 +17,6 @@ const getFixturePath = (filename = '') => path.join(__dirname, '..', '__fixtures
 
 const url = 'https://ru.test.com/test';
 let tempdir;
-let dirFiles;
 
 const links = {
     '/assets/application.css':                  "style.css",
@@ -29,8 +27,6 @@ const links = {
 
 beforeAll(async () => {
     tempdir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
-    const dir = getDirName(url);
-    dirFiles = path.join(tempdir, dir);
 });
 
 test('download ok', async () => {
@@ -47,7 +43,7 @@ test('download ok', async () => {
 
     _.mapKeys(links, async (file, link) => {
         const newFileName = getFileName(link, url); 
-        const savedPathToFile = path.join(dirFiles, newFileName); 
+        const savedPathToFile = path.join(tempdir, newFileName); 
         const expected  = await fsp.readFile(getFixturePath(file), 'binary');
         const actual = await fsp.readFile(savedPathToFile, 'binary');
         expect(actual).toBe(expected);

@@ -2,21 +2,13 @@ import axios from "axios";
 import fsp from 'fs/promises'
 import getFileName from "./getFileName.js";
 import path from 'path';
-import getDirName from "./getDirName.js";
 import 'axios-debug-log';
 import  debug  from "debug";
 import Listr from 'listr';
 import getLink from "./getLink.js";
 
-export default (links, url, filePath) => {
+export default (links, url, dirFiles) => {
     const log = debug('page-loader');
-    const dir = getDirName(url);
-    const dirFiles = path.join(filePath, dir);
-    const promiseCreateDir = fsp.mkdir(dirFiles)
-        .catch((e) => {
-            throw e;
-        });
-
     log('download files...');
     const promises = links.map((link) => {
         let urlForDownload = getLink(link, url);
@@ -47,9 +39,7 @@ export default (links, url, filePath) => {
     });
     const listr = new Listr(promises, {concurrent:true, exitOnError: false});
 
-    return promiseCreateDir.then(() => {
-        return listr.run();
-    }).catch((e) => {
+    return listr.run().catch((e) => {
         throw e;
     });
 }
