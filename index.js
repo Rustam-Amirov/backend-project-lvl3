@@ -21,9 +21,15 @@ export default (url, arg) => {
 
     const dir = getDirName(baseUrl.href);
     const dirFiles = path.join(filePath, dir);
+
+    const permissions = fsp.access(arg, constants.W_OK | constants.R_OK).catch((e) => {
+        return Promise.reject(new Error(e.message));
+    });
     
     log(`doing request: ${baseUrl.href}`);
-    return axios.get(baseUrl.href)
+    return permissions.then(() => {
+        return axios.get(baseUrl.href)
+        })
         .then((response) => {
             if (response.status !== 200) {
                 throw new Error(`url: ${response.config.url} returned ${response.status}`);
