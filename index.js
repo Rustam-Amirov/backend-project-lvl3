@@ -47,8 +47,8 @@ export default (url, arg) => {
         })
         .then((data) => {
             fileLinks = getLinks(data, baseUrl.href);
-            return fsp.access(dirFiles, constants.W_OK).catch(() =>  {
-                return fsp.mkdir(dirFiles);
+            return fsp.mkdir(dirFiles).catch((e) => {
+                return Promise.reject(new Error(e.message));
             });
         })
         .then(() => {
